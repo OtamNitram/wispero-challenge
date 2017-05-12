@@ -23,9 +23,9 @@ namespace Wispero.Data
                 List<String> tags = item.Tags.Split(',').ToList();
                 foreach (string t in tags)
                 {
-                    if (result.Where(x => x.Tag == t).FirstOrDefault() != null)
+                    if (result.Where(x => x.Tag.Contains(t)).FirstOrDefault() != null)
                     {
-                        result.Where(x => x.Tag == t).FirstOrDefault().Count++;
+                        result.Where(x => x.Tag.Contains(t)).FirstOrDefault().Count++;
                     }
                     else
                     {
@@ -38,7 +38,7 @@ namespace Wispero.Data
                 }
             }
 
-            tagMaxCount = result.OrderBy(x => x.Count).First().Count;
+            tagMaxCount = result.OrderByDescending(x => x.Count).First().Count;
 
             return result;
         }
