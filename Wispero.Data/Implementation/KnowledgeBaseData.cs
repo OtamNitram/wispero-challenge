@@ -43,7 +43,17 @@ namespace Wispero.Data
         {
             //TODO: Implement Deleting mechanism for KnowledgeBaseItems.
             //This need to handle concurrency. As long as rowversions are the same then persist changes.
-            _context.Entry<KnowledgeBaseItem>(entity).OriginalValues["RowVersion"] = entity.RowVersion;
+            var original = this.Get(entity.Id);
+
+            if (original != null)
+            {
+                original.Answer = entity.Answer;
+                original.LastUpdateOn = entity.LastUpdateOn;
+                original.Query = entity.Query;
+                original.Tags = entity.Tags;
+            }
+            
+            _context.Entry<KnowledgeBaseItem>(original).OriginalValues["RowVersion"] = entity.RowVersion;
 
         }
 
