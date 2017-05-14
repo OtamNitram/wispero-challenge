@@ -22,10 +22,17 @@ namespace Wispero.Export.Settings
 
         public override void Export(List<KnowledgeBaseItem> source)
         {
-            //TODO: Implement this method to write a text file on the folder and with the filename specified in the constructor.
-            //Write a line for each item in source using the following format... string.Format($"{item.Query}\\t{item.Answer}")
-            throw new NotImplementedException();
+            string lines = "";
+            foreach (KnowledgeBaseItem item in source)
+            {
+                lines += string.Format($"{item.Query}\\t{item.Answer}") + "\r\n";
+            }
 
+            // Write the string to a file.
+            System.IO.StreamWriter file = new System.IO.StreamWriter(FullPath);
+            file.WriteLine(lines);
+
+            file.Close();
         }
     }
 }

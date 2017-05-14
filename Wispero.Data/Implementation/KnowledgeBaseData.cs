@@ -23,7 +23,6 @@ namespace Wispero.Data
         #region Methods
         public void Add(KnowledgeBaseItem entity)
         {
-            //TODO: Implement Adding mechanism for KnowledgeBaseItems.
             _context.KnowledgeBaseItems.Add(entity);
 
         }
@@ -35,13 +34,11 @@ namespace Wispero.Data
 
         public void Delete(int id)
         {
-            //TODO: Implement Deleting mechanism for KnowledgeBaseItems.
             _context.KnowledgeBaseItems.Remove(_context.KnowledgeBaseItems.Where(x => x.Id == id).FirstOrDefault());
         }
 
         public void Edit(KnowledgeBaseItem entity)
         {
-            //TODO: Implement Deleting mechanism for KnowledgeBaseItems.
             //This need to handle concurrency. As long as rowversions are the same then persist changes.
             var original = this.Get(entity.Id);
 
@@ -59,19 +56,16 @@ namespace Wispero.Data
 
         public KnowledgeBaseItem Get(int id)
         {
-            //TODO: Implement Getting by Id mechanism for KnowledgeBaseItems.
             return _context.KnowledgeBaseItems.Where(x => x.Id == id).FirstOrDefault();
         }
 
         public List<KnowledgeBaseItem> GetAll()
         {
-            //TODO: Implement Getting ALL mechanism for KnowledgeBaseItems.
             return _context.KnowledgeBaseItems.ToList();
         }
 
         public List<KnowledgeBaseItem> GetByFilter(Expression<Func<KnowledgeBaseItem, bool>> expression)
         {
-            //TODO: Implement Getting by Filter mechanism for KnowledgeBaseItems.
             return _context.KnowledgeBaseItems.Where(expression).ToList();
         }
 

@@ -16,7 +16,6 @@ namespace Wispero.Data
 
         public static List<Entities.TagItem> Process(List<Entities.KnowledgeBaseItem> items, out int tagMaxCount)
         {
-            //TODO: Based on the list of items you need to rank tags dynamically. Also, return the max value that will be use for Tag Could control.
             List<Entities.TagItem> result = new List<Entities.TagItem>();
             foreach (Entities.KnowledgeBaseItem item in items)
             {

@@ -23,8 +23,12 @@ namespace Wispero.Web.Controllers
             //TODO: Implement mapping from Entities.KnowledgeBaseItem to QuestionAndAnswerItemModel.
             //LastUpdateOn field is set with DateTime.Now and Tags field with lowercase.
             //Also create a map from TagItem to TagModel.
-            throw new NotImplementedException();
-            
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<KnowledgeBaseItem, QuestionAndAnswerItemModel>();
+                cfg.CreateMap<TagItem, TagModel>();
+            });
+
         }
 
         [HttpGet]
@@ -44,7 +48,8 @@ namespace Wispero.Web.Controllers
 
             //TODO: Get all elements and then call the Export method in order to create a text file.
             //Then read and return the file content to the client.
-            throw new NotImplementedException();
+            KnowledgeQnAExport.Export(KnowledgeQuery.GetAll(), new Export.Settings.QnAMakerSetting(path, file));
+            return new FilePathResult(path, "application/text");
         }
     }
 }
