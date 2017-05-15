@@ -20,7 +20,6 @@ namespace Wispero.Web.Controllers
             KnowledgeQuery = queryService;
             KnowledgeQnAExport = exportService;
 
-            //TODO: Implement mapping from Entities.KnowledgeBaseItem to QuestionAndAnswerItemModel.
             //LastUpdateOn field is set with DateTime.Now and Tags field with lowercase.
             //Also create a map from TagItem to TagModel.
             AutoMapper.Mapper.Initialize(cfg =>
@@ -34,9 +33,39 @@ namespace Wispero.Web.Controllers
         [HttpGet]
         public ActionResult Index(string tag = "")
         {
-            //TODO: Implement the corresponding call to get all items or filtered by tag.
             //Return an instance of ListingViewModel.
-            throw new NotImplementedException();
+            List<KnowledgeBaseItem> _knowledgeBaseItemList = new List<KnowledgeBaseItem>();
+
+            if (!String.IsNullOrEmpty(tag))
+            {
+                _knowledgeBaseItemList = KnowledgeQuery.GetByFilter(x => x.Tags.Contains(tag));
+            }
+            else
+            {
+                _knowledgeBaseItemList = KnowledgeQuery.GetAll();
+            }
+
+            List<QuestionAndAnswerItemModel> _questionAndAnswerItemModelList = new List<QuestionAndAnswerItemModel>();
+
+            foreach (KnowledgeBaseItem item in _knowledgeBaseItemList)
+            {
+                _questionAndAnswerItemModelList.Add(new QuestionAndAnswerItemModel
+                {
+                    Answer = item.Answer,
+                    Id = item.Id,
+                    LastUpdateOn = item.LastUpdateOn.ToShortDateString(),
+                    Question = item.Query,
+                    Tags = item.Tags
+                });
+            }
+
+            ListingViewModel model = new ListingViewModel()
+            {
+                Questions = _questionAndAnswerItemModelList,
+                Tag = tag
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -46,8 +75,6 @@ namespace Wispero.Web.Controllers
             var file = string.IsNullOrEmpty(fileName) ? System.Guid.NewGuid().ToString() + ".txt" : fileName;
             var path = string.IsNullOrEmpty(folder) ? AppDomain.CurrentDomain.BaseDirectory + @"\Export\" : folder;
 
-            //TODO: Get all elements and then call the Export method in order to create a text file.
-            //Then read and return the file content to the client.
             KnowledgeQnAExport.Export(KnowledgeQuery.GetAll(), new Export.Settings.QnAMakerSetting(path, file));
             return new FilePathResult(path, "application/text");
         }

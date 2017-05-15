@@ -17,8 +17,35 @@ namespace Wispero.Web.Binders
 
         public static object BindQnAModel(NameValueCollection values, ModelStateDictionary modelState)
         {
-            //TODO: Implement model binder for QuestionAndAnswerModel
-            throw new NotImplementedException();
+            string _answer = values.Get("txtAnswer");
+
+            if (String.IsNullOrEmpty(_answer))
+            {
+                modelState.AddModelError("Answer", "Answer is null");
+            }
+
+            string _question = values.Get("txtQuestion");
+
+            if (String.IsNullOrEmpty(_question))
+            {
+                modelState.AddModelError("Question", "Question is null");
+            }
+
+            string _tags = values.Get("txtTags");
+
+            if (String.IsNullOrEmpty(_tags))
+            {
+                modelState.AddModelError("Tags", "Tags is null");
+            }
+
+            Models.QuestionAndAnswerModel model = new Models.QuestionAndAnswerModel
+            {
+                Answer = _answer,
+                Question = _question,
+                Tags = _tags
+            };
+
+            return model;
         }
     }
 }

@@ -37,7 +37,14 @@ namespace Wispero.Data
                 }
             }
 
-            tagMaxCount = result.OrderByDescending(x => x.Count).First().Count;
+            if (result.Count > 0)
+            {
+                tagMaxCount = result.OrderByDescending(x => x.Count).First().Count;
+            }
+            else
+            {
+                tagMaxCount = 0;
+            }
 
             return result;
         }

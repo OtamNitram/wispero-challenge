@@ -21,11 +21,14 @@ namespace Wispero.Web.Controllers
             KnowledgeBaseData = dataService;
             KnowledgeBaseQuery = queryService;
 
-            //TODO: Implement mapping from QuestionAndAnswerModel to Entities.KnowledgeBaseItem.
-            //LastUpdateOn field is set with DateTime.Now and Tags field with lowercase.
-            //Also create a map from TagItem to TagModel.
-            throw new NotImplementedException();
-            
+            AutoMapper.Mapper.Initialize(cfg =>
+             {
+                 cfg.CreateMap<KnowledgeBaseItem, QuestionAndAnswerItemModel>()
+                     .ForMember(kbi => kbi.LastUpdateOn, opt => opt.MapFrom(o => DateTime.Now.ToShortDateString()))
+                     .BeforeMap((s, d) => d.Tags.ToLower())
+                 ;
+             });
+
         }
 
         public ActionResult Index()
@@ -36,33 +39,53 @@ namespace Wispero.Web.Controllers
         [ChildActionOnly]
         public ActionResult Entry()
         {
-            //TODO: Return partial view "Entry";
-            throw new NotImplementedException();
-            
+            QuestionAndAnswerModel model = new QuestionAndAnswerModel();
+            return PartialView("~/Shared/Entry", model);
         }
 
         [ChildActionOnly]
         [HttpGet]
         public ActionResult TagCloud()
         {
-            //TODO: Return partial view "TagCloud" with an instance of TagCloudviewModel.
             //You need to call TagHelper.Process as shown below.
             int tagMaxCount;
             var tagCloud = TagHelper.Process(KnowledgeBaseQuery, out tagMaxCount);
-            
-            throw new NotImplementedException();
-           
+
+            List<TagModel> _tags = new List<TagModel>();
+
+            foreach (TagItem item in tagCloud)
+            {
+                _tags.Add(new TagModel { Count = item.Count, Tag = item.Tag });
+            }
+
+            TagCloudViewModel model = new TagCloudViewModel()
+            {
+                Tags = _tags,
+                MaxCount = tagMaxCount
+            };
+            return PartialView("~/Shared/TagCloud", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult New(QuestionAndAnswerModel model)
         {
-            //TODO: Return partial view "Entry" with an instance of QuestionAndAnswerModel.
             //If model is valid then persists the new entry on DB. Make sure  data changes are committed.
 
-            throw new NotImplementedException();
-            
+            if (ModelState.IsValid)
+            {
+                KnowledgeBaseData.Add(new KnowledgeBaseItem
+                {
+                    Answer = model.Answer,
+                    Tags = model.Tags
+                });
+                model.Answer = string.Empty;
+                model.Question = string.Empty;
+                model.Tags = string.Empty;
+                KnowledgeBaseData.CommitChanges();
+            }
+
+            return PartialView("~/Shared/Entry", model as QuestionAndAnswerModel);
         }
     }
 }

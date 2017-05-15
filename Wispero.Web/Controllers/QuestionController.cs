@@ -19,16 +19,34 @@ namespace Wispero.Web.Controllers
             KnowledgeData = knowledgeData;
             KnowledgeQuery = knowledgeQuery;
 
-            //TODO: Implement mapping as needed.
-            throw new NotImplementedException();
-            
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<QuesitonAndAnswerEditModel, Entities.KnowledgeBaseItem>()
+                    .ForMember(kbi => kbi.Query, opt => opt.MapFrom(o => o.Question))
+                ;
+            });
+
         }
         // GET: Question
         public ActionResult Edit(int id)
         {
-            //TODO: Implement this method to retrieve and present data for Edition.
-            throw new NotImplementedException();
-      
+            Entities.KnowledgeBaseItem toEdit = KnowledgeQuery.Get(id);
+
+            if (toEdit == null)
+            {
+                return new RedirectResult("~/Shared/Error");
+            }
+
+            QuesitonAndAnswerEditModel model = new QuesitonAndAnswerEditModel
+            {
+                Answer = toEdit.Answer,
+                Id = toEdit.Id,
+                Question = toEdit.Query,
+                RowVersion = toEdit.RowVersion,
+                Tags = toEdit.Tags,
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -37,12 +55,12 @@ namespace Wispero.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 var entity = AutoMapper.Mapper.Map<Entities.KnowledgeBaseItem>(model);
                 try
                 {
-                    //TODO: Implement this part of code to persist changes into database.
-                    throw new NotImplementedException();
+                    KnowledgeData.Edit(entity);
+                    return new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { action = "Index", controller = "HomeController" }));
                 }
                 catch (Exception)
                 {

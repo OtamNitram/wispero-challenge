@@ -28,7 +28,6 @@ namespace Wispero.Export.Settings
                 lines += string.Format($"{item.Query}\\t{item.Answer}") + "\r\n";
             }
 
-            // Write the string to a file.
             System.IO.StreamWriter file = new System.IO.StreamWriter(FullPath);
             file.WriteLine(lines);
 

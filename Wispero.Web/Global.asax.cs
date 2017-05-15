@@ -16,10 +16,7 @@ namespace Wispero.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            //TODO: Register your custom binder.
-            throw new NotImplementedException();
-            
+            ModelBinders.Binders.Add(typeof(Binders.QnAModelBinder), new Binders.QnAModelBinder());            
         }
     }
 }
